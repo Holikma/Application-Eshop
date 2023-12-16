@@ -1,6 +1,7 @@
 #include "Eshop.h"
 
-Eshop::Eshop(QWidget *parent) : QMainWindow(parent){
+
+Eshop::Eshop(QWidget* parent) : QMainWindow(parent) {
     ui.setupUi(this);
 }
 
