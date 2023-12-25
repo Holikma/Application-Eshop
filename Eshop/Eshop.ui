@@ -13,7 +13,7 @@
     <x>0</x>
     <y>0</y>
     <width>1024</width>
-    <height>544</height>
+    <height>550</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,13 +25,13 @@
   <property name="minimumSize">
    <size>
     <width>1024</width>
-    <height>500</height>
+    <height>550</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>1024</width>
-    <height>600</height>
+    <height>550</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -87,7 +87,7 @@
         </size>
        </property>
        <property name="title">
-        <string>GroupBox</string>
+        <string>Item List</string>
        </property>
        <widget class="QTableWidget" name="tableWidget">
         <property name="geometry">
@@ -185,17 +185,17 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>70</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="text">
-                <string>TextLabel</string>
+                <string>Enter Name</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit">
+              <widget class="QLineEdit" name="Line_Name">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -204,7 +204,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>200</width>
+                 <width>150</width>
                  <height>20</height>
                 </size>
                </property>
@@ -260,17 +260,17 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>70</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="text">
-                <string>TextLabel</string>
+                <string>Enter Surname</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_3">
+              <widget class="QLineEdit" name="Line_Surname">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -279,7 +279,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>200</width>
+                 <width>150</width>
                  <height>20</height>
                 </size>
                </property>
@@ -335,20 +335,20 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>70</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="text">
-                <string>TextLabel</string>
+                <string>Enter Budget</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox">
+              <widget class="QSpinBox" name="Line_Budget">
                <property name="maximumSize">
                 <size>
-                 <width>200</width>
+                 <width>150</width>
                  <height>20</height>
                 </size>
                </property>
@@ -398,6 +398,12 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="maximumSize">
+                <size>
+                 <width>150</width>
+                 <height>16777215</height>
+                </size>
+               </property>
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -426,7 +432,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_7">
            <item>
-            <widget class="QPushButton" name="pushButton_5">
+            <widget class="QPushButton" name="Button_LoadData">
              <property name="maximumSize">
               <size>
                <width>80</width>
@@ -434,7 +440,7 @@
               </size>
              </property>
              <property name="text">
-              <string>PushButton</string>
+              <string>Load Data</string>
              </property>
             </widget>
            </item>
@@ -480,9 +486,12 @@
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>40</width>
+               <width>20</width>
                <height>20</height>
               </size>
              </property>
@@ -503,24 +512,45 @@
               </size>
              </property>
              <property name="text">
-              <string>TextLabel</string>
+              <string>Search by:</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="comboBox"/>
+            <widget class="QComboBox" name="comboBox">
+             <item>
+              <property name="text">
+               <string>Name</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Distributor</string>
+              </property>
+             </item>
+            </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_2"/>
+            <widget class="QLineEdit" name="lineEdit_2">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>20</height>
+              </size>
+             </property>
+            </widget>
            </item>
            <item>
             <spacer name="horizontalSpacer_10">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>40</width>
+               <width>20</width>
                <height>20</height>
               </size>
              </property>
@@ -552,7 +582,7 @@
               </size>
              </property>
              <property name="text">
-              <string>PushButton</string>
+              <string>Reset All</string>
              </property>
             </widget>
            </item>
@@ -565,7 +595,7 @@
               </size>
              </property>
              <property name="text">
-              <string>PushButton</string>
+              <string>Reset Cart</string>
              </property>
             </widget>
            </item>
@@ -578,7 +608,7 @@
               </size>
              </property>
              <property name="text">
-              <string>PushButton</string>
+              <string>Purchase</string>
              </property>
             </widget>
            </item>
@@ -619,7 +649,7 @@
         </size>
        </property>
        <property name="title">
-        <string>GroupBox</string>
+        <string>Items in Cart</string>
        </property>
        <widget class="QTableWidget" name="tableWidget_2">
         <property name="geometry">

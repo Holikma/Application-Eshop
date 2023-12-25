@@ -41,4 +41,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="produkty.txt" />
+  </ItemGroup>
 </Project>
