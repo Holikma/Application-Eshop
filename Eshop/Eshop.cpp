@@ -5,9 +5,13 @@ Eshop::Eshop(QWidget* parent) : QMainWindow(parent) {
     ui.setupUi(this);
 	ui.Line_Name->setPlaceholderText("Name");
 	ui.Line_Surname->setPlaceholderText("Surname");
+
     connect(ui.Button_LoadData, SIGNAL(clicked()), this, SLOT(Set_Shop()));
 	connect(ui.Button_Debug, SIGNAL(clicked()), this, SLOT(debug()));
-	connect(ui.List_Shop, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(Double_Clicked()));
+	connect(ui.List_Shop, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(Double_Clicked_to_Cart()));
+	connect(ui.List_Cart, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(Double_Clicked_to_Shop()));
+	connect(ui.Slider_Budget, SIGNAL(valueChanged(int)), ui.Line_Budget, SLOT(setValue(int)));
+	connect(ui.Line_Budget, SIGNAL(valueChanged(int)), ui.Slider_Budget, SLOT(setValue(int)));
 }
 
 Eshop::~Eshop() {}
@@ -37,27 +41,51 @@ void Eshop::Load_File() {
 
 void Eshop::Set_Shop() {
 	Set_Customer();
+	Set_Budget();
 	Load_File();
 	Load_Shop_to_List();
 }
 
-void Eshop::Set_Item(int id) {
-	for (int i = 0; i < Shop.size(); i++) {
-		if (Shop[i].Get_Id() == id) {
-			Shop[i].Set_Quantity(id);
-		}
-	}
+void Eshop::Set_Budget() {	
+	customer.Set_Money(ui.Line_Budget->text().toFloat());
 }
 
-void Eshop::Double_Clicked() {
+void Eshop::Reduce_Item(int id) {
+	for (int i = 0; i < Shop.size(); i++) {
+		if (Shop[i].Get_Id() == id) {
+			Shop[i].Set_Quantity(Shop[i].Get_Quantity() - 1);
+		}
+	}
+	Load_Shop_to_List();
+}
+
+void Eshop::Add_Item(int id) {
+	for (int i = 0; i < Shop.size(); i++) {
+		if (Shop[i].Get_Id() == id) {
+			Shop[i].Set_Quantity(Shop[i].Get_Quantity() + 1);
+		}
+	}
+	Load_Shop_to_List();
+}
+
+void Eshop::Double_Clicked_to_Cart() {
 	int id = ui.List_Shop->item(ui.List_Shop->currentRow(), 0)->text().toInt();
 	Product prod = Get_Item(id);
 	if (prod.Get_Quantity() > 0 && customer.Get_Money() >= prod.Get_Price()) {
 		customer.Add_To_Cart(prod);
 		customer.Set_Money(customer.Get_Money() - prod.Get_Price());
-		Set_Item(id);
+		Reduce_Item(id);
 	}
 	Load_Cart_to_List();
+}
+
+void Eshop::Double_Clicked_to_Shop() {
+	int id = ui.List_Cart->item(ui.List_Cart->currentRow(), 0)->text().toInt();
+	customer.Remove_From_Cart(customer.Get_Cart().Get_Item(id));
+	customer.Set_Money(customer.Get_Money() + Get_Item(id).Get_Price());
+	Add_Item(id);
+	Load_Cart_to_List();
+	
 }
 
 void Eshop::Load_Shop_to_List() {
@@ -159,7 +187,6 @@ void Customer::Add_To_Cart(Product product) {
 	cart.Add(product);
 }
 
-
 void Cart::Add(Product product) {
 	bool found = false;
 	for (int i = 0; i < products.size(); i++) {
@@ -173,6 +200,24 @@ void Cart::Add(Product product) {
 		products.append(product);
 		products[products.size()-1].Set_Quantity(1);
 	}
+	std::sort(products.begin(), products.end(), []( Product a, Product b) { return a.Get_Id() < b.Get_Id(); });
+}
+
+void Customer::Remove_From_Cart(Product product) {
+	cart.Remove(product);
+}
+
+void Cart::Remove(Product product) {
+	for (int i = 0; i < products.size(); i++) {
+		if (products[i].Get_Id() == product.Get_Id()) {
+			products[i].Set_Quantity(products[i].Get_Quantity() - 1);
+			if (products[i].Get_Quantity() == 0) {
+				products.remove(i);
+			}
+			break;
+		}
+	}
+	
 }
 
 void Cart::Print() {
@@ -189,4 +234,3 @@ Product Cart::Get_Item(int id) {
 	}
 	return Product();
 }
-

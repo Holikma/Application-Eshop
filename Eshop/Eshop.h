@@ -6,8 +6,8 @@
 #include <QDir>
 #include <QVector>
 #include <QFile>
+#include <QDebug>
 #include <QMessageBox>
-
 
 class Product {
 	private:
@@ -36,6 +36,7 @@ class Cart {
 	public:
 		Cart() : products() {};
 		void Add(Product product);
+		void Remove(Product product);
 		void Print();
 		Product Get_Item(int id);
 		Product Get_Index(int index) { return products[index]; };
@@ -53,6 +54,7 @@ class Customer {
 		Customer() : Name(), Surname(), money(), cart() {};
 		Customer(QString name, QString Surname, float money, Cart cart);
 		void Add_To_Cart(Product product);
+		void Remove_From_Cart(Product product);
 		Cart Get_Cart() { return cart; };
 		QString Get_Name() { return Name; };
 		QString Get_Surname() { return Surname; };
@@ -71,16 +73,19 @@ class Eshop : public QMainWindow{
 	private slots:
 		void Set_Shop();
 		void debug();
-		void Double_Clicked();
+		void Double_Clicked_to_Cart();
+		void Double_Clicked_to_Shop();
 
     public:
 		void Set_Customer();
+		void Set_Budget();
 		void Print_Shop();
 		Product Get_Item(int id);
 		void Load_File();
 		void Load_Shop_to_List();
 		void Load_Cart_to_List();
-		void Set_Item(int id);
+		void Reduce_Item(int id);
+		void Add_Item(int id);
         Eshop(QWidget *parent = nullptr);
         ~Eshop();
 
