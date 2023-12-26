@@ -5,6 +5,8 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QVector>
+#include <QFile>
+#include <QMessageBox>
 
 
 class Product {
@@ -12,17 +14,18 @@ class Product {
 		int id;
 		QString name;
 		QString distributor;
-		float price;
 		int quantity;
+		float price;
 
 	public:
 		Product() : id(), name(), distributor(), price(), quantity() {};
-		Product(int id, QString name, QString distributor, float price, int quantity);
-		int GetId() { return id; };
-		QString GetName() { return name; };
-		QString GetDistributor() { return distributor; };
-		float GetPrice() { return price; };
-		int GetQuantity() { return quantity; };
+		Product(int id, QString name, QString distributor, int quantity, float price);
+		int Get_Id() { return id; };
+		QString Get_Name() { return name; };
+		QString Get_Distributor() { return distributor; };
+		float Get_Price() { return price; };
+		int Get_Quantity() { return quantity; };
+		void Set_Quantity(int id) { quantity--; };
 		
 };
 
@@ -48,6 +51,11 @@ class Customer {
 		Customer(QString name, QString Surname, float money, Cart cart);
 		void Add_To_Cart(Product product);
 		Cart Get_Cart() { return cart; };
+		QString Get_Name() { return Name; };
+		QString Get_Surname() { return Surname; };
+		float Get_Money() { return money; };
+		void Set_Money(float money) { this->money = money; };
+
 };
 
 class Eshop : public QMainWindow{
@@ -59,8 +67,15 @@ class Eshop : public QMainWindow{
 
 	private slots:
 		void Set_Shop();
+		void debug();
+		void Double_Clicked();
 
     public:
+		void Set_Customer();
+		void Print_Shop();
+		Product Get_Item(int id);
+		void Load_File();
+		void Load_Shop_to_List();
         Eshop(QWidget *parent = nullptr);
         ~Eshop();
 

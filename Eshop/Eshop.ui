@@ -89,7 +89,7 @@
        <property name="title">
         <string>Item List</string>
        </property>
-       <widget class="QTableWidget" name="tableWidget">
+       <widget class="QTableWidget" name="List_Shop">
         <property name="geometry">
          <rect>
           <x>9</x>

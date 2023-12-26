@@ -13,7 +13,7 @@
 11 laptop distr3 15 800.0
 12 mouse distr4 30 10.0
 13 mug distr4 25 12.0
-14 monitor distr3 12 300.0
+100 monitor distr3 12 300.0
 15 printer distr4 5 100.0
 16 chair distr5 20 50.0
 17 desk distr5 10 150.0
@@ -29,11 +29,11 @@
 27 tripod distr4 15 50.0
 28 lens distr4 8 150.0
 29 backbag distr5 12 30.0
-30 book distr5 100 5.0
+150 book distr5 100 5.0
 31 notepad distr5 80 2.0
 32 pen distr5 200 1.0
 33 pencil distr4 150 0.5
 34 ruler distr4 50 1.5
 35 bicycle distr5 5 300.0
-36 skate distr5 10 50.0
-37 helmet distr5 20 15.0
+200 skate distr5 10 50.0
+500 helmet distr5 20 15.0
