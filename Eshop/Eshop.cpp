@@ -41,23 +41,23 @@ void Eshop::Set_Shop() {
 	Load_Shop_to_List();
 }
 
+void Eshop::Set_Item(int id) {
+	for (int i = 0; i < Shop.size(); i++) {
+		if (Shop[i].Get_Id() == id) {
+			Shop[i].Set_Quantity(id);
+		}
+	}
+}
+
 void Eshop::Double_Clicked() {
 	int id = ui.List_Shop->item(ui.List_Shop->currentRow(), 0)->text().toInt();
-	Product product = Get_Item(id);
-	if (product.Get_Quantity() > 0) {
-		if (customer.Get_Money() >= product.Get_Price()) {
-			customer.Add_To_Cart(product);
-			customer.Set_Money(customer.Get_Money() - product.Get_Price());
-			product.Set_Quantity(id);
-			Load_Shop_to_List();
-		}
-		else {
-			QMessageBox::information(this, "Error", "Not enough money");
-		}
+	Product prod = Get_Item(id);
+	if (prod.Get_Quantity() > 0 && customer.Get_Money() >= prod.Get_Price()) {
+		customer.Add_To_Cart(prod);
+		customer.Set_Money(customer.Get_Money() - prod.Get_Price());
+		Set_Item(id);
 	}
-	else {
-		QMessageBox::information(this, "Error", "Not enough products");
-	}
+	Load_Cart_to_List();
 }
 
 void Eshop::Load_Shop_to_List() {
@@ -86,6 +86,35 @@ void Eshop::Load_Shop_to_List() {
 		ui.List_Shop->setItem(i, 2, new QTableWidgetItem(Shop[i].Get_Distributor()));
 		ui.List_Shop->setItem(i, 3, new QTableWidgetItem(QString::number(Shop[i].Get_Price())));
 		ui.List_Shop->setItem(i, 4, new QTableWidgetItem(QString::number(Shop[i].Get_Quantity())));
+	}
+}
+
+void Eshop::Load_Cart_to_List() {
+	ui.List_Cart->setRowCount(customer.Get_Cart().Get_Size());
+	ui.List_Cart->setColumnCount(5);
+
+	ui.List_Cart->setHorizontalHeaderItem(0, new QTableWidgetItem("ID"));
+	ui.List_Cart->setHorizontalHeaderItem(1, new QTableWidgetItem("Name"));
+	ui.List_Cart->setHorizontalHeaderItem(2, new QTableWidgetItem("Distr."));
+	ui.List_Cart->setHorizontalHeaderItem(3, new QTableWidgetItem("$$$"));
+	ui.List_Cart->setHorizontalHeaderItem(4, new QTableWidgetItem("Qnt."));
+
+	ui.List_Cart->verticalHeader()->setVisible(false);
+	ui.List_Cart->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	ui.List_Cart->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+	ui.List_Cart->setColumnWidth(0, 30);
+	ui.List_Cart->setColumnWidth(1, 80);
+	ui.List_Cart->setColumnWidth(2, 80);
+	ui.List_Cart->setColumnWidth(3, 35);
+	ui.List_Cart->setColumnWidth(4, 35);
+
+	for (int i = 0; i < customer.Get_Cart().Get_Size(); i++) {
+		ui.List_Cart->setItem(i, 0, new QTableWidgetItem(QString::number(customer.Get_Cart().Get_Index(i).Get_Id())));
+		ui.List_Cart->setItem(i, 1, new QTableWidgetItem(customer.Get_Cart().Get_Index(i).Get_Name()));
+		ui.List_Cart->setItem(i, 2, new QTableWidgetItem(customer.Get_Cart().Get_Index(i).Get_Distributor()));
+		ui.List_Cart->setItem(i, 3, new QTableWidgetItem(QString::number(customer.Get_Cart().Get_Index(i).Get_Price())));
+		ui.List_Cart->setItem(i, 4, new QTableWidgetItem(QString::number(customer.Get_Cart().Get_Index(i).Get_Quantity())));
 	}
 }
 
@@ -132,12 +161,32 @@ void Customer::Add_To_Cart(Product product) {
 
 
 void Cart::Add(Product product) {
-	products.append(product);
+	bool found = false;
+	for (int i = 0; i < products.size(); i++) {
+		if (products[i].Get_Id() == product.Get_Id()) {
+			products[i].Set_Quantity(products[i].Get_Quantity() + 1);
+			found = true;
+			break;
+		}
+	}
+	if (!found) {
+		products.append(product);
+		products[products.size()-1].Set_Quantity(1);
+	}
 }
 
 void Cart::Print() {
 	for (int i = 0; i < products.size(); i++) {
 		qDebug() << products[i].Get_Id() << products[i].Get_Name().toStdString() << products[i].Get_Distributor().toStdString() << products[i].Get_Price() << products[i].Get_Quantity();
 	}
+}
+
+Product Cart::Get_Item(int id) {
+	for (int i = 0; i < products.size(); i++) {
+		if (products[i].Get_Id() == id) {
+			return products[i];
+		}
+	}
+	return Product();
 }
 

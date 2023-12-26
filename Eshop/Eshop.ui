@@ -651,7 +651,7 @@
        <property name="title">
         <string>Items in Cart</string>
        </property>
-       <widget class="QTableWidget" name="tableWidget_2">
+       <widget class="QTableWidget" name="List_Cart">
         <property name="geometry">
          <rect>
           <x>9</x>

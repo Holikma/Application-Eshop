@@ -25,7 +25,7 @@ class Product {
 		QString Get_Distributor() { return distributor; };
 		float Get_Price() { return price; };
 		int Get_Quantity() { return quantity; };
-		void Set_Quantity(int id) { quantity--; };
+		void Set_Quantity(int quantity) { this->quantity = quantity; };
 		
 };
 
@@ -37,6 +37,9 @@ class Cart {
 		Cart() : products() {};
 		void Add(Product product);
 		void Print();
+		Product Get_Item(int id);
+		Product Get_Index(int index) { return products[index]; };
+		int Get_Size() { return products.size(); };
 };
 
 class Customer {
@@ -76,6 +79,8 @@ class Eshop : public QMainWindow{
 		Product Get_Item(int id);
 		void Load_File();
 		void Load_Shop_to_List();
+		void Load_Cart_to_List();
+		void Set_Item(int id);
         Eshop(QWidget *parent = nullptr);
         ~Eshop();
 
