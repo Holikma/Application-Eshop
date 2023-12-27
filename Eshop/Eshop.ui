@@ -353,7 +353,7 @@
                 </size>
                </property>
                <property name="maximum">
-                <number>10000</number>
+                <number>1000</number>
                </property>
               </widget>
              </item>
@@ -408,7 +408,7 @@
                 </size>
                </property>
                <property name="maximum">
-                <number>10000</number>
+                <number>1000</number>
                </property>
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -485,7 +485,7 @@
          <item>
           <layout class="QGridLayout" name="gridLayout">
            <item row="1" column="2">
-            <widget class="QLineEdit" name="lineEdit_3"/>
+            <widget class="QLineEdit" name="Line_Cart_Money"/>
            </item>
            <item row="1" column="1">
             <widget class="QLabel" name="label_6">
@@ -515,7 +515,7 @@
             </widget>
            </item>
            <item row="0" column="2">
-            <widget class="QLineEdit" name="lineEdit"/>
+            <widget class="QLineEdit" name="Line_Cust_Money"/>
            </item>
            <item row="0" column="3">
             <spacer name="horizontalSpacer_13">
@@ -612,7 +612,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="comboBox">
+            <widget class="QComboBox" name="Box_Search">
              <item>
               <property name="text">
                <string>Name</string>
@@ -626,7 +626,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_2">
+            <widget class="QLineEdit" name="Line_Search">
              <property name="maximumSize">
               <size>
                <width>150</width>

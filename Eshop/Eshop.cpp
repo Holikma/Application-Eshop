@@ -12,12 +12,28 @@ Eshop::Eshop(QWidget* parent) : QMainWindow(parent) {
 	connect(ui.List_Cart, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(Double_Clicked_to_Shop()));
 	connect(ui.Slider_Budget, SIGNAL(valueChanged(int)), ui.Line_Budget, SLOT(setValue(int)));
 	connect(ui.Line_Budget, SIGNAL(valueChanged(int)), ui.Slider_Budget, SLOT(setValue(int)));
+	connect(ui.Line_Search, SIGNAL(textChanged(QString)), this, SLOT(Filter_Table()));
 }
 
 Eshop::~Eshop() {}
 
 void Eshop::Set_Customer() {
-	customer = Customer(ui.Line_Name->text(), ui.Line_Surname->text(), ui.Line_Budget->text().toFloat(), Cart());
+	QString name = ui.Line_Name->text();
+	QString surname = ui.Line_Surname->text();
+	float budget = ui.Line_Budget->text().toFloat();
+	customer = Customer(name, surname, budget, Cart());
+}
+
+void Eshop::Filter_Table() {
+	int switcher = 1;
+	if (ui.Box_Search->currentText() == "Distributor") {
+		switcher = 2;
+	}
+	QString name = ui.Line_Search->text();
+	for (int row = 0; row < ui.List_Shop->rowCount(); ++row) {
+		bool shouldShow = ui.List_Shop->item(row, switcher)->text().contains(name, Qt::CaseInsensitive);
+		ui.List_Shop->setRowHidden(row, !shouldShow);
+	}
 }
 
 void Eshop::Load_File() {
@@ -35,19 +51,15 @@ void Eshop::Load_File() {
 		Shop.append(Product(list[0].toInt(), list[1], list[2], list[3].toInt(), list[4].toFloat()));
 		line = in.readLine();
 	}
+	std::sort(Shop.begin(), Shop.end(), [](Product a, Product b) { return a.Get_Id() < b.Get_Id(); });
+	Load_Shop_to_List();
 	Print_Shop();
 	file.close();
 }
 
 void Eshop::Set_Shop() {
 	Set_Customer();
-	Set_Budget();
 	Load_File();
-	Load_Shop_to_List();
-}
-
-void Eshop::Set_Budget() {	
-	customer.Set_Money(ui.Line_Budget->text().toFloat());
 }
 
 void Eshop::Reduce_Item(int id) {
@@ -76,6 +88,9 @@ void Eshop::Double_Clicked_to_Cart() {
 		customer.Set_Money(customer.Get_Money() - prod.Get_Price());
 		Reduce_Item(id);
 	}
+	else {
+		QMessageBox::information(this, "Error", "Not enough money or product is out of stock");
+	}
 	Load_Cart_to_List();
 }
 
@@ -100,7 +115,6 @@ void Eshop::Load_Shop_to_List() {
 	ui.List_Shop->verticalHeader()->setVisible(false);
 	ui.List_Shop->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	ui.List_Shop->setSelectionBehavior(QAbstractItemView::SelectRows);
-
 
 	ui.List_Shop->setColumnWidth(0, 30);
 	ui.List_Shop->setColumnWidth(1, 80);
@@ -156,8 +170,6 @@ void Eshop::debug() {
 	qDebug() << customer.Get_Name().toStdString() << customer.Get_Surname().toStdString() << customer.Get_Money();
 	customer.Get_Cart().Print();
 }
-
-
 
 Product Eshop::Get_Item(int id) {
 	for (int i = 0; i < Shop.size(); i++) {
@@ -217,7 +229,6 @@ void Cart::Remove(Product product) {
 			break;
 		}
 	}
-	
 }
 
 void Cart::Print() {
