@@ -31,15 +31,19 @@ class Product {
 class Cart {
 	private:
 		QVector<Product> products;
+		float sum;
 
 	public:
-		Cart() : products() {};
+		Cart() : products(), sum(0) {};
 		int Get_Size() { return products.size(); };
 		void Add(Product product);
 		void Remove(Product product);
 		void Print();
 		Product Get_Item(int id);
 		Product Get_Index(int index) { return products[index]; };
+		float Get_Sum() { return sum; };
+		void Set_Sum(float sum) { this->sum = sum; };
+	
 };
 
 class Customer {
@@ -74,6 +78,9 @@ class Eshop : public QMainWindow{
 		void Double_Clicked_to_Cart();
 		void Double_Clicked_to_Shop();
 		void Filter_Table();
+		void Save_to_File();
+		void Reset_Cart();
+		void Reset_Shop_Data();
 
     public:
         Eshop(QWidget *parent = nullptr);
@@ -86,5 +93,6 @@ class Eshop : public QMainWindow{
 		void Reduce_Item(int id);
 		void Add_Item(int id);
 		Product Get_Item(int id);
+		void Set_headers();
 };
 

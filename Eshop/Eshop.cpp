@@ -3,9 +3,7 @@
 
 Eshop::Eshop(QWidget* parent) : QMainWindow(parent) {
     ui.setupUi(this);
-	ui.Line_Name->setPlaceholderText("Name");
-	ui.Line_Surname->setPlaceholderText("Surname");
-
+	Set_headers();
     connect(ui.Button_LoadData, SIGNAL(clicked()), this, SLOT(Set_Shop()));
 	connect(ui.Button_Debug, SIGNAL(clicked()), this, SLOT(debug()));
 	connect(ui.List_Shop, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(Double_Clicked_to_Cart()));
@@ -13,6 +11,10 @@ Eshop::Eshop(QWidget* parent) : QMainWindow(parent) {
 	connect(ui.Slider_Budget, SIGNAL(valueChanged(int)), ui.Line_Budget, SLOT(setValue(int)));
 	connect(ui.Line_Budget, SIGNAL(valueChanged(int)), ui.Slider_Budget, SLOT(setValue(int)));
 	connect(ui.Line_Search, SIGNAL(textChanged(QString)), this, SLOT(Filter_Table()));
+	connect(ui.Button_Purchase, SIGNAL(clicked()), this, SLOT(Save_to_File()));
+	connect(ui.Button_Reset_Cart, SIGNAL(clicked()), this, SLOT(Reset_Cart()));
+	connect(ui.Button_Reset_All, SIGNAL(clicked()), this, SLOT(Reset_Shop_Data()));
+
 }
 
 Eshop::~Eshop() {}
@@ -22,6 +24,7 @@ void Eshop::Set_Customer() {
 	QString surname = ui.Line_Surname->text();
 	float budget = ui.Line_Budget->text().toFloat();
 	customer = Customer(name, surname, budget, Cart());
+	ui.Line_Cust_Money->setText(QString::number(customer.Get_Money()));
 }
 
 void Eshop::Filter_Table() {
@@ -62,6 +65,35 @@ void Eshop::Set_Shop() {
 	Load_File();
 }
 
+void Eshop::Reset_Cart() {
+	int cartSize = customer.Get_Cart().Get_Size();
+	for (int i = cartSize - 1; i >= 0; i--) {
+		int quantity = customer.Get_Cart().Get_Index(i).Get_Quantity();
+		int productId = customer.Get_Cart().Get_Index(i).Get_Id();
+		float productPrice = customer.Get_Cart().Get_Index(i).Get_Price();
+
+		for (int j = quantity - 1; j >= 0; j--) {
+			Add_Item(productId);
+			customer.Remove_From_Cart(customer.Get_Cart().Get_Index(i));
+			customer.Set_Money(customer.Get_Money() + productPrice);
+		}
+	}
+	ui.Line_Cart_Money->setText(QString::number(customer.Get_Cart().Get_Sum()));
+	ui.Line_Cust_Money->setText(QString::number(customer.Get_Money()));
+	Load_Cart_to_List();
+	Load_Shop_to_List();
+}
+
+void Eshop::Reset_Shop_Data() {
+	Shop = QVector<Product>();
+	customer = Customer("", "", 0, Cart());
+	ui.Line_Cart_Money->setText(QString::number(customer.Get_Cart().Get_Sum()));
+	ui.Line_Cust_Money->setText(QString::number(customer.Get_Money()));
+	Set_headers();
+	Load_Cart_to_List();
+	Load_Shop_to_List();
+}
+
 void Eshop::Reduce_Item(int id) {
 	for (int i = 0; i < Shop.size(); i++) {
 		if (Shop[i].Get_Id() == id) {
@@ -87,6 +119,8 @@ void Eshop::Double_Clicked_to_Cart() {
 		customer.Add_To_Cart(prod);
 		customer.Set_Money(customer.Get_Money() - prod.Get_Price());
 		Reduce_Item(id);
+		ui.Line_Cart_Money->setText(QString::number(customer.Get_Cart().Get_Sum()));
+		ui.Line_Cust_Money->setText(QString::number(customer.Get_Money()));
 	}
 	else {
 		QMessageBox::information(this, "Error", "Not enough money or product is out of stock");
@@ -99,28 +133,14 @@ void Eshop::Double_Clicked_to_Shop() {
 	customer.Remove_From_Cart(customer.Get_Cart().Get_Item(id));
 	customer.Set_Money(customer.Get_Money() + Get_Item(id).Get_Price());
 	Add_Item(id);
+	ui.Line_Cart_Money->setText(QString::number(customer.Get_Cart().Get_Sum()));
+	ui.Line_Cust_Money->setText(QString::number(customer.Get_Money()));
 	Load_Cart_to_List();
 	
 }
 
 void Eshop::Load_Shop_to_List() {
 	ui.List_Shop->setRowCount(Shop.size());
-	ui.List_Shop->setColumnCount(5);
-	ui.List_Shop->setHorizontalHeaderItem(0, new QTableWidgetItem("ID"));
-	ui.List_Shop->setHorizontalHeaderItem(1, new QTableWidgetItem("Name"));
-	ui.List_Shop->setHorizontalHeaderItem(2, new QTableWidgetItem("Distr."));
-	ui.List_Shop->setHorizontalHeaderItem(3, new QTableWidgetItem("$$$"));
-	ui.List_Shop->setHorizontalHeaderItem(4, new QTableWidgetItem("Qnt."));
-
-	ui.List_Shop->verticalHeader()->setVisible(false);
-	ui.List_Shop->setEditTriggers(QAbstractItemView::NoEditTriggers);
-	ui.List_Shop->setSelectionBehavior(QAbstractItemView::SelectRows);
-
-	ui.List_Shop->setColumnWidth(0, 30);
-	ui.List_Shop->setColumnWidth(1, 80);
-	ui.List_Shop->setColumnWidth(2, 80);
-	ui.List_Shop->setColumnWidth(3, 35);
-	ui.List_Shop->setColumnWidth(4, 35);
 
 	for (int i = 0; i < Shop.size(); i++) {
 		ui.List_Shop->setItem(i, 0, new QTableWidgetItem(QString::number(Shop[i].Get_Id())));
@@ -133,23 +153,6 @@ void Eshop::Load_Shop_to_List() {
 
 void Eshop::Load_Cart_to_List() {
 	ui.List_Cart->setRowCount(customer.Get_Cart().Get_Size());
-	ui.List_Cart->setColumnCount(5);
-
-	ui.List_Cart->setHorizontalHeaderItem(0, new QTableWidgetItem("ID"));
-	ui.List_Cart->setHorizontalHeaderItem(1, new QTableWidgetItem("Name"));
-	ui.List_Cart->setHorizontalHeaderItem(2, new QTableWidgetItem("Distr."));
-	ui.List_Cart->setHorizontalHeaderItem(3, new QTableWidgetItem("$$$"));
-	ui.List_Cart->setHorizontalHeaderItem(4, new QTableWidgetItem("Qnt."));
-
-	ui.List_Cart->verticalHeader()->setVisible(false);
-	ui.List_Cart->setEditTriggers(QAbstractItemView::NoEditTriggers);
-	ui.List_Cart->setSelectionBehavior(QAbstractItemView::SelectRows);
-
-	ui.List_Cart->setColumnWidth(0, 30);
-	ui.List_Cart->setColumnWidth(1, 80);
-	ui.List_Cart->setColumnWidth(2, 80);
-	ui.List_Cart->setColumnWidth(3, 35);
-	ui.List_Cart->setColumnWidth(4, 35);
 
 	for (int i = 0; i < customer.Get_Cart().Get_Size(); i++) {
 		ui.List_Cart->setItem(i, 0, new QTableWidgetItem(QString::number(customer.Get_Cart().Get_Index(i).Get_Id())));
@@ -180,6 +183,69 @@ Product Eshop::Get_Item(int id) {
 	return Product();
 }
 
+void Eshop::Save_to_File() {
+	QString filePath = QFileDialog::getSaveFileName(nullptr, "Save File", QFileInfo(QCoreApplication::applicationDirPath()).dir().filePath("Data/listok.txt"));
+	QFile file(filePath);
+	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+		qDebug() << "File not opened";
+		return;
+	}
+	QTextStream out(&file);
+	out << "ID Name Distributor Quantity Price";
+	for (int i = 0; i < Shop.size(); i++) {
+		out << Shop[i].Get_Id() << " " << Shop[i].Get_Name() << " " << Shop[i].Get_Distributor() << " " << Shop[i].Get_Quantity() << " " << Shop[i].Get_Price();
+	}
+	file.close();
+}
+
+void Eshop::Set_headers() {
+	ui.Line_Name->setText("");
+	ui.Line_Name->setPlaceholderText("Name");
+	ui.Line_Surname->setText("");
+	ui.Line_Surname->setPlaceholderText("Surname");
+	ui.Line_Budget->setValue(0);
+	ui.Line_Cart_Money->setPlaceholderText("0");
+	ui.Line_Cart_Money->setReadOnly(true);
+	ui.Line_Cust_Money->setReadOnly(true);
+
+	ui.Line_Cust_Money->setText(QString::number(0));
+	ui.Line_Cart_Money->setText(QString::number(0));
+
+	ui.List_Shop->setColumnCount(5);
+	ui.List_Shop->setHorizontalHeaderItem(0, new QTableWidgetItem("ID"));
+	ui.List_Shop->setHorizontalHeaderItem(1, new QTableWidgetItem("Name"));
+	ui.List_Shop->setHorizontalHeaderItem(2, new QTableWidgetItem("Distr."));
+	ui.List_Shop->setHorizontalHeaderItem(3, new QTableWidgetItem("$$$"));
+	ui.List_Shop->setHorizontalHeaderItem(4, new QTableWidgetItem("Qnt."));
+
+	ui.List_Shop->verticalHeader()->setVisible(false);
+	ui.List_Shop->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	ui.List_Shop->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+	ui.List_Shop->setColumnWidth(0, 30);
+	ui.List_Shop->setColumnWidth(1, 80);
+	ui.List_Shop->setColumnWidth(2, 80);
+	ui.List_Shop->setColumnWidth(3, 35);
+	ui.List_Shop->setColumnWidth(4, 35);
+
+	ui.List_Cart->setColumnCount(5);
+	ui.List_Cart->setHorizontalHeaderItem(0, new QTableWidgetItem("ID"));
+	ui.List_Cart->setHorizontalHeaderItem(1, new QTableWidgetItem("Name"));
+	ui.List_Cart->setHorizontalHeaderItem(2, new QTableWidgetItem("Distr."));
+	ui.List_Cart->setHorizontalHeaderItem(3, new QTableWidgetItem("$$$"));
+	ui.List_Cart->setHorizontalHeaderItem(4, new QTableWidgetItem("Qnt."));
+
+	ui.List_Cart->verticalHeader()->setVisible(false);
+	ui.List_Cart->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	ui.List_Cart->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+	ui.List_Cart->setColumnWidth(0, 30);
+	ui.List_Cart->setColumnWidth(1, 80);
+	ui.List_Cart->setColumnWidth(2, 80);
+	ui.List_Cart->setColumnWidth(3, 35);
+	ui.List_Cart->setColumnWidth(4, 35);
+}
+
 Product::Product(int id, QString name, QString distributor, int quantity, float price) {
 	this->id = id;
 	this->name = name;
@@ -197,6 +263,7 @@ Customer::Customer(QString Name, QString Surname, float money, Cart cart) {
 
 void Customer::Add_To_Cart(Product product) {
 	cart.Add(product);
+	cart.Set_Sum(cart.Get_Sum() + product.Get_Price());
 }
 
 void Cart::Add(Product product) {
@@ -217,6 +284,7 @@ void Cart::Add(Product product) {
 
 void Customer::Remove_From_Cart(Product product) {
 	cart.Remove(product);
+	cart.Set_Sum(cart.Get_Sum() - product.Get_Price());
 }
 
 void Cart::Remove(Product product) {

@@ -490,7 +490,7 @@
            <item row="1" column="1">
             <widget class="QLabel" name="label_6">
              <property name="text">
-              <string>Curent Cart Cost</string>
+              <string>Current Cart Cost</string>
              </property>
             </widget>
            </item>
@@ -669,7 +669,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="Button_Reset_All">
              <property name="maximumSize">
               <size>
                <width>80</width>
@@ -682,7 +682,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_3">
+            <widget class="QPushButton" name="Button_Reset_Cart">
              <property name="maximumSize">
               <size>
                <width>80</width>
@@ -695,7 +695,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="Button_Purchase">
              <property name="maximumSize">
               <size>
                <width>80</width>
