@@ -1,1 +1,9 @@
-ID Name Distributor Quantity Price0 banana distr1 5 21 orange distr1 3 2.52 potato distr2 10 43 chips distr2 10 1.54 fruit distr1 7 35 tomato distr1 8 46 apple distr2 7 37 apricot distr1 8 5.58 berries distr2 4 19 avocado distr1 2 210 phone distr3 20 17011 laptop distr3 15 80012 mouse distr4 30 1013 mug distr4 25 1215 printer distr4 5 10016 chair distr5 20 5017 desk distr5 10 15018 sofa distr5 15 20019 table distr5 8 10020 shirt distr3 50 2021 pants distr3 40 2522 dress distr4 30 3523 shoes distr4 25 4024 hat distr3 15 1025 jacket distr3 20 4526 camera distr4 10 20027 tripod distr4 15 5028 lens distr4 8 15029 backbag distr5 12 3031 notepad distr5 80 232 pen distr5 200 133 pencil distr4 150 0.534 ruler distr4 50 1.535 bicycle distr5 5 300100 monitor distr3 12 300150 book distr5 100 5200 skate distr5 10 50500 helmet distr5 20 15
+<--------------------Customer-------------------->
+Customer:	fsd sdf		Budget: 504
+<----------------------Cart---------------------->
+ID Name Distributor Quantity Price
+orange	distr1	Qnt: 2	Price: 2.5	Total: 5
+potato	distr2	Qnt: 2	Price: 4	Total: 8
+<------------------------------------------------>
+.....Total.....: 						13
+...Cash left...: 						491

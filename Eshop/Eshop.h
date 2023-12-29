@@ -35,6 +35,7 @@ class Cart {
 
 	public:
 		Cart() : products(), sum(0) {};
+
 		int Get_Size() { return products.size(); };
 		void Add(Product product);
 		void Remove(Product product);
@@ -77,10 +78,10 @@ class Eshop : public QMainWindow{
 		void debug();
 		void Double_Clicked_to_Cart();
 		void Double_Clicked_to_Shop();
-		void Filter_Table();
-		void Save_to_File();
 		void Reset_Cart();
 		void Reset_Shop_Data();
+		void Filter_Table();
+		void Save_to_File();
 
     public:
         Eshop(QWidget *parent = nullptr);
